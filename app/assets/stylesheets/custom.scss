@@ -1,0 +1,24 @@
+@import "bootstrap";
+
+
+.container {
+  width: 1170px;
+}
+.page-heading {
+  text-align: left;
+  position: relative;
+  padding: 40px 0;
+
+  h1 {
+   font-size: 50px;
+   margin-bottom: 20px; 
+  }
+  
+  p {
+    font-size: 24px;
+  }
+}
+
+.center {
+  text-align: center;
+}
