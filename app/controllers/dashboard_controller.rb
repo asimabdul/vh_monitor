@@ -3,13 +3,16 @@ class DashboardController < ApplicationController
     if params.keys.size > 2
       [:controller, :action].each {|key| params.delete(key) }
       jenkins_data = JSON.parse(params.keys.first)
-      $redis["job_name"] = jenkins_data["name"]
-      $redis["ci-development-status"] = parse_color(jenkins_data)
+      $redis["#{jenkins_data["name"]}_status"] = parse_color(jenkins_data)
     end
   end
   
   def status
-    render :json => {:ci => $redis["ci-development-status"], :job_name => $redis["job_name"], :status => :ok}
+    job_statuses = []
+    $redis.keys("*_status").each do |k|
+      job_statuses << {:color => $redis[k], :name => k}
+    end
+    render :json => {:status => "ok", :job_statuses => job_statuses}  
   end
   
   

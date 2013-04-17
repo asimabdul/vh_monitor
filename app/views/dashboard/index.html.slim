@@ -1,2 +1,3 @@
-.status-box
-  = $redis["job_name"]
+- $redis.keys("*_status").each do |job|
+  .status-box class="#{job}" 
+    = job.chomp!("_status")
