@@ -1,3 +1,5 @@
-- $redis.keys("*_status").each do |job|
-  .status-box class="#{job}" 
-    = job.chomp!("_status")
+- @job_statuses.map{|job_status| job_status}. each do |job|
+  .status-box class="#{job.name}"
+    = job.name
+    .details
+      = job.updated_at
