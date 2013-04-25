@@ -4,20 +4,20 @@ class JobStatus
   NAMESPACE = "ci:monitor:"
 
   def initialize(data = {})
-    merge!(data)
+    set_attributes(data)
   end
 
-  def merge!(data = {})
+  def set_attributes(data = {})
     raise 'Name of the job required!' if data["name"].blank?
 
     @name = data["name"]
 
     if data["build"]
-      @phase ||= data["build"]["phase"]
-      @status ||= data["build"]["status"]
+      @phase = data["build"]["phase"]
+      @status = data["build"]["status"]
     else
-      @phase ||= data["phase"]
-      @status ||= data["status"]
+      @phase = data["phase"]
+      @status = data["status"]
     end
 
     @branch = data["branch"] || 'unknown'
@@ -36,7 +36,7 @@ class JobStatus
     existing = JobStatus.find(data["name"])
 
     record = if existing
-               existing.merge!(data)
+               existing.set_attributes(data)
              else
                JobStatus.new(data)
              end
