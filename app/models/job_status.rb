@@ -1,5 +1,5 @@
 class JobStatus
-  attr_accessor :name, :phase, :color, :status, :branch, :updated_at
+  attr_accessor :name, :phase, :color, :status, :branch, :updated_at, :author
 
   NAMESPACE = "ci:monitor:"
 
@@ -20,7 +20,8 @@ class JobStatus
       @status = data["status"]
     end
 
-    @branch = data["branch"] || 'unknown'
+    @branch = data["branch"] || @branch || 'unknown'
+    @author = data["author"] || @author || 'unknown'
 
     @updated_at = data["updated_at"]
     @color = set_color
