@@ -13,7 +13,7 @@ function getStatus() {
       $(".container .message").text(data.job_statuses[status]['message']);
     }
 
-    $(".container .message").text(data.message);
+    $(".container .message").html(data.message);
   })
 }
 
