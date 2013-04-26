@@ -11,6 +11,7 @@ class DashboardController < ApplicationController
   end
   
   def status
-    render :json => {:status => "ok", :job_statuses => JobStatus.all}
+    render :json => {:status => "ok", :job_statuses => JobStatus.all,
+                     :message => JobStatus.last_updated.try(:message) || 'TDD is your friend, procrastination is your enemy!'}
   end
 end

@@ -9,7 +9,11 @@ function getStatus() {
 
       var branch_details = "(" + data.job_statuses[status]['branch'] + " by " + data.job_statuses[status]['author'] + ")";
       status_div.find(".details").text(branch_details);
+
+      $(".container .message").text(data.job_statuses[status]['message']);
     }
+
+    $(".container .message").text(data.message);
   })
 }
 

@@ -1,5 +1,5 @@
 class JobStatus
-  attr_accessor :name, :phase, :color, :status, :branch, :updated_at, :author
+  attr_accessor :name, :phase, :color, :status, :branch, :updated_at, :timestamp, :author, :message
 
   NAMESPACE = "ci:monitor:"
 
@@ -24,13 +24,21 @@ class JobStatus
     @author = data["author"] || @author || 'unknown'
 
     @updated_at = data["updated_at"]
+    @timestamp = data["timestamp"]
+
     @color = set_color
+
+    @message = data["message"] || @message
     self
   end
 
   def save
+    @timestamp = Time.now.to_i
     @updated_at = Time.now.strftime('%a %b %d %I:%M%p')
-    $redis["#{NAMESPACE}#{name}"] = self.to_json
+
+    key = "#{NAMESPACE}#{name}"
+    $redis[key] = self.to_json
+    $redis.expire(key, 3600 * 8) #expire in 8 hours, you don;t use it - you lose it
   end
 
   def self.save_or_update!(data ={})
@@ -47,6 +55,10 @@ class JobStatus
 
   def self.find(name)
     all.detect { |record| record.name.eql?(name)}
+  end
+
+  def self.last_updated
+    all.sort_by {|j| j.timestamp.to_i }.last
   end
 
   def self.all

@@ -3,22 +3,37 @@
 
 .container {
   width: 1170px;
+  margin-left: 5px;
 }
 .page-heading {
   text-align: left;
   position: relative;
-  padding: 40px 0;
+  padding: 20px 0;
 
   h1 {
-   font-size: 50px;
+   font-size: 40px;
    margin-bottom: 20px; 
   }
   
   p {
     font-size: 24px;
   }
+
+  .message {
+    border: 3px solid #ffffff;
+    width: 80%;
+    padding: 2px;
+
+    font-size: 12px;
+    color: red;
+    background-color: #d3d3d3;
+  }
 }
 
 .center {
   text-align: center;
+}
+
+.clear {
+  clear:both;
 }
