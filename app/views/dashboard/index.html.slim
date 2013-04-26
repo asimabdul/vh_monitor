@@ -1,5 +1,8 @@
 - @job_statuses.map{|job_status| job_status}. each do |job|
   .status-box class="#{job.name}"
-    = job.name
+    .name
+        = job.name
+    .timestamp
+        = job.updated_at
+    .clear
     .details
-      = job.updated_at
