@@ -1,8 +1,9 @@
 .status-box {
+  float: left;
   //height: 20px;
   width: 440px;
   border: 3px solid #ffffff;
-  margin: 5px 5px 5px 5px;
+  //margin: 7px;
   padding: 10px;
   font-size: 20px;
   color: white;
@@ -44,6 +45,4 @@
   background-color: orange;
   color: black;
 }
-
-.clear {clear:both;}
 
