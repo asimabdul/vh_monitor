@@ -11,7 +11,7 @@
   padding: 20px 0;
 
   h1 {
-   font-size: 40px;
+   font-size: 30px;
    margin-bottom: 20px; 
   }
   
@@ -22,10 +22,11 @@
   .message {
     border: 3px solid #ffffff;
     width: 80%;
-    padding: 2px;
+    padding: 5px;
 
-    font-size: 12px;
-    color: red;
+    line-height: 1.2;
+    font-size: 30px;
+    color: #ff4500;
     background-color: #d3d3d3;
   }
 }
