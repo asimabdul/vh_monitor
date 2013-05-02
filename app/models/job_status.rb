@@ -1,5 +1,5 @@
 class JobStatus
-  attr_accessor :name, :phase, :color, :status, :branch, :updated_at, :timestamp, :author, :message
+  attr_accessor :name, :phase, :color, :status, :branch, :updated_at, :timestamp, :deployed_at, :formatted_deployed_at, :author, :message
 
   NAMESPACE = "ci:monitor:"
 
@@ -25,6 +25,10 @@ class JobStatus
 
     @updated_at = data["updated_at"]
     @timestamp = data["timestamp"]
+    @deployed_at = data["deployed_at"] || @deployed_at
+
+    @updated_at = formatted_time(@timestamp)
+    @formatted_deployed_at =  formatted_time(@deployed_at)
 
     @color = set_color
 
@@ -34,7 +38,6 @@ class JobStatus
 
   def save
     @timestamp = Time.now.to_i
-    @updated_at = Time.now.strftime('%a %b %d %I:%M%p')
 
     key = "#{NAMESPACE}#{name}"
     $redis[key] = self.to_json
@@ -81,5 +84,9 @@ class JobStatus
       else
         "gray"
     end
+  end
+
+  def formatted_time(time)
+    time ? Time.at(time.to_i).strftime('%a %b %d %I:%M%p') : "unknown"
   end
 end
