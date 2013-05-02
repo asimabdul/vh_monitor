@@ -13,12 +13,19 @@ function getStatus() {
       status_div.find(".details").html(branch_details);
 
       $(".container .message").text(data.job_statuses[status]['message']);
+
+      status_div.addClass(data.job_statuses[status]['priority']);
     }
 
     $(".container .message").html(data.message);
   })
 }
 
+function blink() {
+  $(".status-box.attention").toggleClass("blink");
+}
+
 $(document).ready(function(){
   setInterval(getStatus, 4000);
+  setInterval(blink, 700);
 })

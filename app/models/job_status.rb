@@ -1,5 +1,6 @@
 class JobStatus
-  attr_accessor :name, :phase, :color, :status, :branch, :updated_at, :timestamp, :deployed_at, :formatted_deployed_at, :author, :message
+  attr_accessor :name, :phase, :color, :status, :branch, :updated_at, :timestamp, :deployed_at,
+                :formatted_deployed_at, :author, :message, :priority, :fail_count, :last_succeeded_at
 
   NAMESPACE = "ci:monitor:"
 
@@ -30,7 +31,11 @@ class JobStatus
     @updated_at = formatted_time(@timestamp)
     @formatted_deployed_at =  formatted_time(@deployed_at)
 
+    @fail_count = data["fail_count"] || @fail_count
+    @last_succeeded_at = data["last_succeeded_at"] || @last_succeeded_at
+
     @color = set_color
+    @priority = set_priority
 
     @message = data["message"] || @message
     self
@@ -38,6 +43,7 @@ class JobStatus
 
   def save
     @timestamp = Time.now.to_i
+    record_failures
 
     key = "#{NAMESPACE}#{name}"
     $redis[key] = self.to_json
@@ -84,6 +90,27 @@ class JobStatus
       else
         "gray"
     end
+  end
+
+  def record_failures
+    if phase == "FAILURE"
+      @fail_count = @fail_count.to_i + 1
+    elsif phase == "SUCCESS"
+      @fail_count = 0
+      @last_succeeded_at = Time.now.to_i
+    end
+  end
+
+  def set_priority
+    if (phase == "FAILURE") && failing?
+      "attention"
+    else
+      "normal"
+    end
+  end
+
+  def failing?(grace_period=30.minutes)
+    (fail_count >= 3) || (last_succeeded_at ? false : (Time.now - last_succeeded_at > grace_period))
   end
 
   def formatted_time(time)
