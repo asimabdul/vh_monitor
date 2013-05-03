@@ -110,7 +110,7 @@ class JobStatus
   end
 
   def failing?(grace_period=30.minutes)
-    (fail_count >= 3) || (last_succeeded_at ? false : (Time.now - last_succeeded_at > grace_period))
+    (fail_count >= 3) || (last_succeeded_at.nil? ? false : (Time.now - last_succeeded_at > grace_period))
   end
 
   def formatted_time(time)
