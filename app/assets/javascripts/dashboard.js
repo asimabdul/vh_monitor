@@ -30,4 +30,5 @@ function blink() {
 $(document).ready(function(){
   setInterval(getStatus, 4000);
   setInterval(blink, 700);
+  setInterval('window.location.reload()', 60000);
 })
