@@ -43,7 +43,7 @@ class JobStatus
 
   def save
     @timestamp = Time.now.to_i
-    record_failures
+    record_failures if phase == "FINISHED"
 
     key = "#{NAMESPACE}#{name}"
     $redis[key] = self.to_json
@@ -93,16 +93,16 @@ class JobStatus
   end
 
   def record_failures
-    if phase == "FAILURE"
+    if status == "FAILURE"
       @fail_count = @fail_count.to_i + 1
-    elsif phase == "SUCCESS"
+    elsif status == "SUCCESS"
       @fail_count = 0
       @last_succeeded_at = Time.now.to_i
     end
   end
 
   def set_priority
-    if (phase == "FAILURE") && failing?
+    if (status == "FAILURE") && failing?
       "attention"
     else
       "normal"
