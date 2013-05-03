@@ -22,6 +22,8 @@ function getStatus() {
 }
 
 function blink() {
+  $(".status-box.attention").removeClass('blue orange red green gray');
+  $(".status-box.attention.blink").addClass("red");
   $(".status-box.attention").toggleClass("blink");
 }
 
