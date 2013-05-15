@@ -1,4 +1,5 @@
 VhMonitor::Application.routes.draw do
+  resources :dashboard
   root :to => "dashboard#index"
   match 'status' => "dashboard#status"
   # The priority is based upon order of creation:

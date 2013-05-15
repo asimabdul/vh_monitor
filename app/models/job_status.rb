@@ -1,11 +1,13 @@
-class JobStatus
+class JobStatus < Record
   attr_accessor :name, :phase, :color, :status, :branch, :updated_at, :timestamp, :deployed_at,
                 :formatted_deployed_at, :author, :message, :priority, :fail_count, :last_succeeded_at
 
-  NAMESPACE = "ci:monitor:"
-
   def initialize(data = {})
     set_attributes(data)
+  end
+
+  def self.namespace
+    "ci:monitor:jobs:"
   end
 
   def set_attributes(data = {})
@@ -45,9 +47,7 @@ class JobStatus
     @timestamp = Time.now.to_i
     record_failures if phase == "FINISHED"
 
-    key = "#{NAMESPACE}#{name}"
-    $redis[key] = self.to_json
-    $redis.expire(key, 3600 * 8) #expire in 8 hours, you don;t use it - you lose it
+    super
   end
 
   def self.save_or_update!(data ={})
@@ -60,18 +60,6 @@ class JobStatus
              end
 
     record.save
-  end
-
-  def self.find(name)
-    all.detect { |record| record.name.eql?(name)}
-  end
-
-  def self.last_updated
-    all.sort_by {|j| j.timestamp.to_i }.last
-  end
-
-  def self.all
-    $redis.keys("#{NAMESPACE}*").map { |k| JobStatus.new(JSON.parse($redis[k])) }
   end
 
   def set_color
@@ -115,5 +103,13 @@ class JobStatus
 
   def formatted_time(time)
     time ? Time.at(time.to_i).strftime('%a %b %d %I:%M%p') : "unknown"
+  end
+
+  def self.all
+    $redis.keys("#{namespace}*").map { |k| JobStatus.new(JSON.parse($redis[k])) }
+  end
+
+  def ttl
+    8 * 3600 #8 hours
   end
 end
