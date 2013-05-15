@@ -21,8 +21,8 @@ class DashboardController < ApplicationController
   end
 
   def status
-    message = Announcement.most_important || Announcement.last_updated || JobStatus.last_updated || 'TDD is your friend, procrastination is your enemy!'
+    message = Announcement.most_important || Announcement.last_updated || JobStatus.last_updated
     render :json => {:status => "ok", :job_statuses => JobStatus.all,
-                     :message => message.try(:important_message, JobStatus.last_updated.try(:message)) || message.try(:message)}
+                     :message => message.try(:important_message, JobStatus.last_updated.try(:message)) || message.try(:message) || 'TDD is your friend, procrastination is your enemy!'}
   end
 end

@@ -14,7 +14,7 @@ class Record
     all.sort_by {|j| j.timestamp.to_i }.last
   end
 
-  def important_message
+  def important_message(_ = nil)
     nil
   end
 end
