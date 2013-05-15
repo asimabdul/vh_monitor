@@ -29,6 +29,11 @@ class Announcement <  Record
     "orange"
   end
 
+  def save
+    @name = "#{@name}-#{timestamp}"
+    super
+  end
+
   def formatted_time(time)
     time ? Time.at(time.to_i).strftime('%a %b %d %I:%M%p') : "unknown"
   end
@@ -38,12 +43,16 @@ class Announcement <  Record
   end
 
   def self.most_important
-    all.detect {|a| a.tags & ['@demo','@important']}
+    all.select {|a| (a.tags & ['@demo','@important']).present?}.sort_by(&:timestamp).last 
+  end
+
+  def self.last_updated
+    all.sort_by {|j| Time.parse(j.timestamp).to_i }.last
   end
 
   def important_message(additional_message=nil)
     msg = ""
-    msg << "<b>[#{tags.join(',')}] : </b><b>#{message}</b> from #{from} sent at <b>#{Time.parse(timestamp)}</b>."
+    msg << "<b>[#{tags.join(',')}] : </b><b>#{message}</b> from #{from} sent at <b>#{formatted_time(Time.parse(timestamp))}</b>."
     msg << " #2:#{additional_message}" if additional_message
     msg
   end
