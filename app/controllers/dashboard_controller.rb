@@ -3,7 +3,8 @@ class DashboardController < ApplicationController
     [:controller, :action].each {|key| params.delete(key) }
 
     if params.keys.present?
-      jenkins_or_deployment_data = JSON.parse(params.keys.first)
+      data = params.slice("name", "url", "build").to_json
+      jenkins_or_deployment_data = JSON.parse(data)
       JobStatus.save_or_update!(jenkins_or_deployment_data)
     end
 
